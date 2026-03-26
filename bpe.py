@@ -1,3 +1,5 @@
+import pickle
+
 class BytePairTokenizer:
     def __init__(self, vocab_size):
         """Initialize the tokenizer.
@@ -69,3 +71,11 @@ class BytePairTokenizer:
         """The list of byte ids. Typically, the output of the GPT kind of model you wish to decode into actual text."""
         byte_seq = b"".join(self.vocab[idx] for idx in ids)
         return byte_seq.decode("utf-8", errors="replace")
+    
+    def save(self, path):
+        with open(path, "wb") as f:
+            pickle.dump((self.merges, self.vocab), f)
+
+    def load(self, path):
+        with open(path, "rb") as f:
+            self.merges, self.vocab = pickle.load(f)
